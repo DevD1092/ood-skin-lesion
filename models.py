@@ -4,9 +4,9 @@ import torch.nn as nn
 import timm
 
 class SimpleCNN(nn.Module):
-    def __init__(self, model,output_size, pretrained=True, loss='Softmax'):
+    def __init__(self, model,output_size, loss='Softmax'):
         super(SimpleCNN, self).__init__()
-        resnet = models.resnet34(pretrained=pretrained)
+        resnet = models.resnet34(pretrained=True)
         self.loss = loss
         
         modules = list(resnet.children())[:-1]
