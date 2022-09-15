@@ -24,7 +24,7 @@ class ISICDataset(Dataset):
         if not test_mode:
             val_index = np.linspace(0, len(self.paths), len(self.paths) // 5, endpoint=False, dtype=np.int)
             train_index = np.setdiff1d(np.arange(len(self.paths)), val_index)
-            np.save('isic_val_index.npy',val_index)
+            np.save('isic_val_index.npy',val_index) #Later this will be used for testing as well in val.py
             np.save('isic_train_index.npy',train_index)
             if is_train:
                 self.paths = np.array(self.paths)[train_index]
