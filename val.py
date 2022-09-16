@@ -50,8 +50,8 @@ def validate(args,valid_dl, valid_ood,model, criterion):
                 _, preds = torch.max(outputs, 1)
                 _pred_k.append(F.softmax(outputs,dim=1).data.cpu().numpy())
             elif args.loss == 'GCPLoss':
-                x, y = model(images)
-                logits, _ = criterion(x, y, targets)
+                x, y = model(inputs)
+                logits, _ = criterion(x, y, labels)
                 preds = logits.data.max(1)[1]
                 _pred_k.append(logits.data.cpu().numpy())
 
@@ -66,17 +66,17 @@ def validate(args,valid_dl, valid_ood,model, criterion):
         
         print ('Starting the OOD Testing')
         count_out = 0
-        for inputs, targets, _ in tqdm(valid_ood):
+        for inputs, labels, _ in tqdm(valid_ood):
             count_out += 1
             inputs = inputs.to(args.device)
-            targets = targets.to(args.device)
+            labels = labels.to(args.device)
             
             # Pass the inputs through the CNN model.
             if args.loss == 'Softmax':
                 outputs = model(inputs)
                 _pred_u.append(F.softmax(outputs,dim=1).data.cpu().numpy())
             elif args.loss == 'GCPLoss':
-                x, y = model(images)
+                x, y = model(inputs)
                 logits, _ = criterion(x, y)
                 _pred_u.append(logits.data.cpu().numpy())
             
@@ -102,7 +102,8 @@ def main(args,options):
     options.update(
         {
             'feat_dim': feat_dim,
-            'use_gpu': use_gpu
+            'use_gpu': use_gpu,
+            'num_classes': 6
         }
     )
     if use_gpu:
@@ -145,7 +146,7 @@ def main(args,options):
     print('Build and load model parameters...')
     args.num_classes = 6
     print('total classes is {}'.format(args.num_classes))
-    model = SimpleCNN(args.network,args.num_classes)
+    model = SimpleCNN(args.network,args.num_classes,loss=args.loss)
     model = nn.DataParallel(model).to(args.device)
     model.to(args.device)
     model.load_state_dict(checkpoint['model'])
@@ -193,7 +194,7 @@ if __name__ == '__main__':
     parser.add_argument('--output-dir', default='results', help='where to save results')
     parser.add_argument('--output-filename', type=str, default=None, help='output file name, default: val_YYYYMMDD.csv')
     # data params
-    parser.add_argument('--image-size', type=int, default=320, help='image size to the model')
+    parser.add_argument('--image-size', type=int, default=224, help='image size to the model')
     parser.add_argument('--num-workers', type=int, default=8, help='number of data loader workers')
     parser.add_argument('--batch-size', type=int, default=128, help='mini batch size')
     # other
