@@ -5,7 +5,9 @@ This repository contains the code for the MICCAI 2022 paper "Out-of-Distribution
 
 Note that the code is only for ISIC2019 dataset as our in-house dataset could not be publicly released.
 
-<img src="https://github.com/DevD1092/ood-skin-lesion/blob/main/figures/Fig3.png" style=" width:256px ; height:256px "  >
+<img src="https://github.com/DevD1092/ood-skin-lesion/blob/main/figures/Fig2.png" >
+
+<img src="https://github.com/DevD1092/ood-skin-lesion/blob/main/figures/Fig3.png" >
 
 ## Train
 There are four experiments to be trained as listed below.
